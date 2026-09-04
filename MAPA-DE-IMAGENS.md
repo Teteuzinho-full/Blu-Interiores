@@ -2,7 +2,12 @@
 
 Cada espaço reservado no site está marcado como **"Imagem N"**. Quando o cliente enviar as fotos reais, é só substituir o arquivo `assets/placeholders/imagem-N.svg` pela foto correspondente (mantendo o mesmo nome de arquivo, ou atualizando o `src` no HTML).
 
-Sugestão de formato final: JPG ou WebP, alta resolução, orientação retrato ou quadrada para melhor enquadramento.
+## Recomendação de performance ao inserir as fotos reais
+- Exporte em **WebP** (com fallback JPG se precisar de suporte a navegadores muito antigos).
+- Comprima para no máximo ~200–300KB por imagem em telas grandes (ferramentas: Squoosh, TinyPNG).
+- Use `srcset`/`sizes` para servir versões menores em mobile (ex: 640w, 1024w, 1600w).
+- Mantenha a proporção retrato (4:5) nas imagens de `split-media` e `carousel-slide`, e paisagem larga (16:9 ou mais) nas de `hero-media`, para evitar cortes estranhos no `object-fit: cover`.
+- Ao trocar cada `<img>`, adicione `loading="lazy" decoding="async"` (já configurado nos placeholders) — mantenha esses atributos.
 
 ## Home (index.html)
 | Nº | Local | Sugestão de conteúdo |

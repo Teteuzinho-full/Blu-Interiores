@@ -99,7 +99,25 @@
       window.clearTimeout(track._t);
       track._t = window.setTimeout(updateDots, 80);
     }, {passive:true});
+
+    // keyboard support: left/right arrows move the carousel when it has focus
+    track.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight'){ e.preventDefault(); scrollToSlide(Math.min(slides.length-1, currentIndex()+1)); }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); scrollToSlide(Math.max(0, currentIndex()-1)); }
+    });
   });
+
+  /* ---------- back to top ---------- */
+  var backToTop = document.querySelector('.back-to-top');
+  if(backToTop){
+    document.addEventListener('scroll', function(){
+      if(window.scrollY > 900){ backToTop.classList.add('is-visible'); }
+      else{ backToTop.classList.remove('is-visible'); }
+    }, {passive:true});
+    backToTop.addEventListener('click', function(){
+      window.scrollTo({ top:0, behavior:'smooth' });
+    });
+  }
 
   /* ---------- whatsapp fab ---------- */
   var waFab = document.querySelector('.wa-fab');
@@ -126,11 +144,13 @@
       wrap.classList.add('has-error');
       var err = wrap.querySelector('.field-error');
       if(err) err.textContent = msg;
+      field.setAttribute('aria-invalid', 'true');
     }
     function clearError(field){
       var wrap = field.closest('.field');
       if(!wrap) return;
       wrap.classList.remove('has-error');
+      field.removeAttribute('aria-invalid');
     }
     function isValidEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
     function isValidPhone(v){ return v.replace(/\D/g,'').length >= 10; }
@@ -176,6 +196,8 @@
           status.textContent = 'Verifique os campos destacados antes de enviar.';
           status.classList.add('is-visible','is-error');
         }
+        var firstInvalid = form.querySelector('[aria-invalid="true"]');
+        if(firstInvalid){ firstInvalid.focus(); }
         return;
       }
 
